@@ -17,6 +17,7 @@
 
 CREATE SCHEMA IF NOT EXISTS SpotifyClone;
 USE SpotifyClone;
+SET SQL_SAFE_UPDATES = 0;
 
 CREATE TABLE IF NOT EXISTS SpotifyClone.planos (
   id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
@@ -39,6 +40,16 @@ CREATE TABLE IF NOT EXISTS SpotifyClone.artistas (
   id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
   artistas VARCHAR(45) NOT NULL
  )
+ENGINE = InnoDB;
+
+CREATE TABLE IF NOT EXISTS SpotifyClone.seguindo_artistas (
+  usuarios_id1 INT NOT NULL,
+  artistas_id INT NOT NULL,
+  PRIMARY KEY (usuarios_id1, artistas_id),
+    FOREIGN KEY (usuarios_id1)
+    REFERENCES SpotifyClone.usuarios (id),
+    FOREIGN KEY (artistas_id)
+    REFERENCES SpotifyClone.artistas (id))
 ENGINE = InnoDB;
 
 CREATE TABLE IF NOT EXISTS SpotifyClone.albuns (
@@ -69,15 +80,12 @@ FOREIGN KEY (usuarios_id1) REFERENCES SpotifyClone.usuarios(id),
 )
 ENGINE = InnoDB;
 
-CREATE TABLE IF NOT EXISTS SpotifyClone.seguindo_artistas (
-  usuarios_id1 INT NOT NULL,
-  artistas_id INT NOT NULL,
-  PRIMARY KEY (usuarios_id1, artistas_id),
-    FOREIGN KEY (usuarios_id1)
-    REFERENCES SpotifyClone.usuarios (id),
-    FOREIGN KEY (artistas_id)
-    REFERENCES SpotifyClone.artistas (id))
-ENGINE = InnoDB;
+INSERT INTO SpotifyClone.planos (planos, valor)
+VALUES
+  ('gratuito', 0.00),
+  ('familiar', 7.99),
+  ('universitário', 5.99),
+  ('pessoal', 6.99);
 
 INSERT INTO SpotifyClone.usuarios (usuario, idade, planos_id, data_assinatura)
 VALUES
@@ -91,14 +99,7 @@ VALUES
     ('Carol', 19, 3, '2018-02-14'),
     ('Angelina', 42, 2, '2018-04-29'),
     ('Paul', 46, 2, '2017-01-17');
-  
-INSERT INTO SpotifyClone.planos (planos, valor)
-VALUES
-  ('gratuito', 0.00),
-  ('familiar', 7.99),
-  ('universitário', 5.99),
-  ('pessoal', 6.99);
-  
+
 INSERT INTO SpotifyClone.artistas (artistas)
 VALUES
   ('Walter Phoenix'),
@@ -107,7 +108,15 @@ VALUES
   ('Freedie Shannon'),
   ('Tyler Isle'),
   ('Fog');
-  
+
+INSERT INTO SpotifyClone.seguindo_artistas (usuarios_id1, artistas_id)
+VALUES
+	(1, 1), (1, 4), (1, 3), (2, 1), (2, 3),
+    (3, 2), (3, 1), (4, 4), (5, 5), (5, 6),
+    (6, 6), (6, 3), (6, 1), (7, 2), (7, 5),
+    (8, 1), (8, 5), (9, 6), (9, 4), (9, 3),
+    (10, 2), (10, 6);
+
 INSERT INTO SpotifyClone.albuns (albuns, artistas_id, ano_lancamento)
 VALUES
   ('Envious', 1, 1990),
@@ -188,11 +197,3 @@ VALUES
     (10, 20, '2017-02-06 08:21:34'), (10, 21, '2017-12-04 05:33:43'),
     (10, 12, '2017-07-27 05:24:49'), (10, 13, '2017-12-25 01:03:57')
     ; 
-    
-INSERT INTO SpotifyClone.seguindo_artistas (usuarios_id1, artistas_id)
-VALUES
-	(1, 1), (1, 4), (1, 3), (2, 1), (2, 3),
-    (3, 2), (3, 1), (4, 4), (5, 5), (5, 6),
-    (6, 6), (6, 3), (6, 1), (7, 2), (7, 5),
-    (8, 1), (8, 5), (9, 6), (9, 4), (9, 3),
-    (10, 2), (10, 6);
